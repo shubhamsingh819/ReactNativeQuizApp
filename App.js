@@ -140,7 +140,12 @@ const App = () => {
         }}
       >
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "grey",
+          }}
         >
           <View
             style={{
@@ -157,8 +162,14 @@ const App = () => {
               elevation: 5,
             }}
           >
+            <AntDesign name="infocirlceo" size={24} color="black" />
             <Text
-              style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}
+              style={{
+                fontSize: 18,
+                fontWeight: "bold",
+                marginBottom: 10,
+                textAlign: "center",
+              }}
             >
               Explanation
             </Text>
