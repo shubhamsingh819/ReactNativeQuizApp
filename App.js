@@ -18,16 +18,26 @@ const { height, width } = Dimensions.get("window");
 const App = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const [questions, setQuestions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState(
+    Array(questions.length).fill(-1)
+  ); // Keep tracking of selected options
   const listRef = useRef();
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [correct, setCorrect] = useState(0);
+  const [wrong, setWrong] = useState(0);
 
   useEffect(() => {
     // Fetch quiz questions when component mounts
     fetchQuizQuestions();
   }, []);
+
+  useEffect(() => {
+    // Updating selectedOptions state after questions are fetched
+    setSelectedOptions(Array(questions.length).fill(-1));
+  }, [questions]);
 
   const fetchQuizQuestions = async () => {
     try {
@@ -47,19 +57,6 @@ const App = () => {
   const handleSubmit = async () => {
     try {
       // Calculate total correct and wrong answers
-      let correct = 0;
-      let wrong = 0;
-      questions.forEach((question) => {
-        if (question.marked !== -1) {
-          if (question.marked === question.answerIndex) {
-            correct++;
-          } else {
-            wrong++;
-          }
-        }
-      });
-
-      console.log("cw", correct, wrong);
 
       const response = await axios.post(
         `http://192.168.1.100:8000/api/quiz/createQuiz`,
@@ -81,10 +78,25 @@ const App = () => {
     }
   };
 
-  const OnSelectOption = (index, x) => {
-    const tempData = [...questions]; // Copy the array
-    tempData[index].marked = x;
+  const OnSelectOption = (index, selectedOptionIndex) => {
+    const tempData = [...questions];
+    tempData[index].selectedOptionIndex = selectedOptionIndex;
     setQuestions(tempData);
+
+    // Get the selected option
+    const selectedOption = tempData[index].options[selectedOptionIndex];
+
+    if (selectedOption === tempData[index].answer) {
+      // Increment correct count if the selected option is correct
+      setCorrect((prevCorrect) => prevCorrect + 1);
+    } else {
+      // Increment wrong count if the selected option is wrong
+      setWrong((prevWrong) => prevWrong + 1);
+    }
+
+    const updatedSelectedOptions = [...selectedOptions];
+    updatedSelectedOptions[index] = selectedOptionIndex;
+    setSelectedOptions(updatedSelectedOptions);
   };
 
   return (

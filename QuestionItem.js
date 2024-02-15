@@ -30,7 +30,7 @@ const QuestionItem = ({ data, selectedOption }) => {
     if (!answered) {
       setAnswered(true);
       setSelectedOptionIndex(index);
-      selectedOption(index + 1);
+      selectedOption(index);
     }
   };
 
