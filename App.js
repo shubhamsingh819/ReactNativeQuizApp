@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import QuestionItem from "./QuestionItem";
 import axios from "axios";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("window");
 
@@ -28,6 +28,8 @@ const App = () => {
   const [email, setEmail] = useState("");
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
+  const [explanationModalVisible, setExplanationModalVisible] = useState(false);
+  const [explanation, setExplanation] = useState("");
 
   useEffect(() => {
     // Fetch quiz questions when component mounts
@@ -99,6 +101,16 @@ const App = () => {
     setSelectedOptions(updatedSelectedOptions);
   };
 
+  const handleInfoPress = () => {
+    // Dummy explanation text
+    const dummyExplanation =
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel enim nec sem commodo porttitor. Duis iaculis venenatis lorem, nec bibendum magna dictum a.";
+
+    // Seting the explanation text and make the explanation modal visible
+    setExplanation(dummyExplanation);
+    setExplanationModalVisible(true);
+  };
+
   return (
     <>
       <TouchableOpacity
@@ -116,8 +128,58 @@ const App = () => {
           }
         }}
       >
-        <Ionicons name="arrow-back" size={24} color="black" />
+        <AntDesign name="leftcircle" size={24} color="black" />
       </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={explanationModalVisible}
+        onRequestClose={() => {
+          setExplanationModalVisible(false);
+        }}
+      >
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <View
+            style={{
+              backgroundColor: "white",
+              borderRadius: 10,
+              padding: 20,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+          >
+            <Text
+              style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}
+            >
+              Explanation
+            </Text>
+            <Text>{explanation}</Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "green",
+                height: 50,
+                borderRadius: 10,
+                marginTop: 20,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => setExplanationModalVisible(false)} // Close the modal
+            >
+              <Text style={{ color: "#fff" }}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       <View style={{ flex: 1 }}>
         <View
           style={{
@@ -158,6 +220,15 @@ const App = () => {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
+          <TouchableOpacity
+            style={{
+              alignSelf: "flex-end",
+              marginRight: 20,
+            }}
+            onPress={handleInfoPress}
+          >
+            <AntDesign name="infocirlceo" size={24} color="black" />
+          </TouchableOpacity>
         </View>
         <View
           style={{
